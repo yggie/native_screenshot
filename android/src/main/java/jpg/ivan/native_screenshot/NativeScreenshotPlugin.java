@@ -401,18 +401,23 @@ public class NativeScreenshotPlugin implements MethodCallHandler, FlutterPlugin,
 
 		int perm = this.activity.checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
+		if (perm != PackageManager.PERMISSION_GRANTED) {
+			Log.println(Log.INFO, TAG, "Requesting permissions...");
+			this.activity.requestPermissions(
+					new String[] {
+							Manifest.permission.READ_EXTERNAL_STORAGE,
+							Manifest.permission.WRITE_EXTERNAL_STORAGE
+					},
+					11); // requestPermissions()
+
+			perm = this.activity.checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+		}
+
 		if (perm == PackageManager.PERMISSION_GRANTED) {
 			Log.println(Log.INFO, TAG, "Permission to write granted!");
 
 			return true;
 		} // if
-
-		Log.println(Log.INFO, TAG, "Requesting permissions...");
-		this.activity.requestPermissions(
-				new String[] {
-						Manifest.permission.WRITE_EXTERNAL_STORAGE
-				},
-				11); // requestPermissions()
 
 		Log.println(Log.INFO, TAG, "No permissions :(");
 
